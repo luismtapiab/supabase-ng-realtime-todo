@@ -7,6 +7,9 @@
                 Loading...
             </span>
             }
+            <span class="status" [class.connected]="isConnected()?.alive">
+                {{ isConnected()?.alive ? 'Connected' : 'Not Connected' }}
+            </span>
             <button (click)="fetchTodos()">Refresh</button>
         </div>
     </div>

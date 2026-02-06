@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Database } from '../../services/database';
+import { AliveMsg, Database } from '../../services/database';
 import { Todo } from '../../models/todo.model';
 import { Subject } from 'rxjs';
 
@@ -16,10 +16,16 @@ export class TodoList implements OnInit {
   todos: Subject<Todo[]> = new Subject<Todo[]>();
   newTodoTitle = '';
   loading = signal(false);
+  isConnected = signal<AliveMsg | null>(null);
 
   constructor(private db: Database) { }
 
   ngOnInit() {
+
+    this.db.isAlive().subscribe((res) => {
+      this.isConnected.set(res);
+    });
+
 
     // Subscribe to realtime changes to update the list
     this.db.getTodoChanges().subscribe(() => {

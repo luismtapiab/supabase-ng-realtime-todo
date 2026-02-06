@@ -1,3 +1,17 @@
+.status {
+    font-size: 18px;
+    padding: 5px;
+}
+
+.status.connected {
+    color: green;
+}
+
+.status:not(.connected) {
+    color: red;
+}
+
+
 .todo-container {
     padding: 0px 30px;
 }
