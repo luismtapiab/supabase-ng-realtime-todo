@@ -1,0 +1,20 @@
+<div class="panel">
+    <div class="header">
+        <h3>Activity Log</h3> <button (click)="logs.next([])">Clear</button>
+    </div>
+    <div class="logs">
+
+        @if(logs | async; as logscontent) {
+        @for(log of logscontent; track $index) {
+        <div class="log-item">
+            {{ log }}
+        </div>
+        }
+        }
+        @else {
+        <div class="empty-state">
+            No activity yet...
+        </div>
+        }
+    </div>
+</div>

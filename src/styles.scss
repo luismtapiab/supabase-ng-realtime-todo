@@ -1,0 +1,21 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+    background-color: #112;
+    color: white;
+    font-size: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+button {
+    background-color: darkblue;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 20px;
+
+}
