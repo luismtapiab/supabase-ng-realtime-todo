@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -16,15 +16,17 @@ export class Database {
     );
 
     const changes = this.client
-      .channel('schema-db-changes')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'todos',
-
+      .channel('txchanges', {
+        config: {
+          private: true,
+        },
+      })
+      .on('broadcast', {
+        event: '*'
       },
         payload => {
           this.changes.next(payload)
+          console.log(payload)
         }
       ).subscribe();
 
@@ -32,4 +34,24 @@ export class Database {
   getTodoChanges() {
     return this.changes.asObservable();
   }
+
+  isAlive(): Observable<AliveMsg> {
+    return new Observable((observer) => {
+      this.client.rpc('db_is_alive').then(res => {
+        if (res.data) {
+          observer.next(res.data as AliveMsg);
+        } else {
+          observer.error(res.error);
+        }
+      });
+    });
+  }
+}
+
+
+export interface AliveMsg {
+  alive: boolean,
+  now: string,
+  version: string,
+  message: string
 }

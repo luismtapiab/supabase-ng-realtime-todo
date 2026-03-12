@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Database } from '../../services/database';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-lateral-panel',
@@ -19,7 +19,7 @@ export class LateralPanel implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription = this.db.getTodoChanges().subscribe((payload) => {
-      const event = payload.eventType;
+      const event = payload.event;
       const time = new Date().toLocaleTimeString();
       let message = '';
 

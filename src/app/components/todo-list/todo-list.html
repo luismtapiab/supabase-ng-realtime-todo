@@ -23,12 +23,13 @@
 
 
     <ul class="todo-list">
-        <li *ngFor="let todo of todos | async" [class.completed]="todo.is_completed" [class.loading]="loading()"
-            class="todo-item">
+        @for(todo of todos | async; track $index) {
+        <li [class.completed]="todo.is_completed" [class.loading]="loading()" class="todo-item">
             <input type="checkbox" [checked]="todo.is_completed" (change)="toggleTodo(todo)">
             <span class="title">{{ todo.title }}</span>
             <button class="delete-btn" (click)="deleteTodo(todo.id)">X</button>
         </li>
+        }
     </ul>
     @if((todos | async)?.length === 0) {
     <div class="empty-state">
