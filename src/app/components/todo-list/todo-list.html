@@ -26,7 +26,8 @@
         @for(todo of todos | async; track $index) {
         <li [class.completed]="todo.is_completed" [class.loading]="loading()" class="todo-item">
             <input type="checkbox" [checked]="todo.is_completed" (change)="toggleTodo(todo)">
-            <span class="title">{{ todo.title }}</span>
+            <span class="title"><strong>{{ todo.title }}</strong></span>
+            <span class="content">{{ todo.content }}</span>
             <button class="delete-btn" (click)="deleteTodo(todo.id)">X</button>
         </li>
         }
