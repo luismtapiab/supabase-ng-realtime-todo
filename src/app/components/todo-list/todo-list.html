@@ -3,9 +3,9 @@
     <ul>
       <li><strong>Todo Realtime</strong></li>
       @if (auth.user$ | async; as user) {
-        <li>
-          Hi, <strong>{{ user.user_metadata['username'] || user.email }}</strong>
-        </li>
+      <li>
+        Hi, <strong>{{ user.user_metadata['username'] || user.email }}</strong>
+      </li>
       }
     </ul>
 
@@ -18,35 +18,34 @@
       </li>
       <li><button (click)="openAddTodo()" class="primary">New Todo</button></li>
       <li><button (click)="fetchTodos()" class="outline contrast">Refresh</button></li>
-      <li><button (click)="logout()" class="secondary">Logout</button></li>
     </ul>
   </nav>
 
   <section class="todo-list">
     @for (todo of todos | async; track todo) {
-      <article class="todo-item" [class.completed]="todo.is_completed">
-        <header>
-          <div class="grid item-header">
-            <label>
-              <input type="checkbox" [checked]="todo.is_completed" (change)="toggleTodo(todo)">
-              <span class="title"><strong>{{ todo.title }}</strong></span>
-            </label>
-            <span class="author">by @{{ getUsername(todo.user_id) }}</span>
-          </div>
-        </header>
-        <div class="content">
-          <span>{{ todo.content }}</span>
-          <button class="outline secondary delete-btn" (click)="deleteTodo(todo.id)">
-            Delete
-          </button>
+    <article class="todo-item" [class.completed]="todo.is_completed">
+      <header>
+        <div class="grid item-header">
+          <label>
+            <input type="checkbox" [checked]="todo.is_completed" (change)="toggleTodo(todo)">
+            <span class="title"><strong>{{ todo.title }}</strong></span>
+          </label>
+          <span class="author">by @{{ getUsername(todo.user_id) }}</span>
         </div>
-      </article>
+      </header>
+      <div class="content">
+        <span>{{ todo.content }}</span>
+        <button class="outline secondary delete-btn" (click)="deleteTodo(todo.id)">
+          Delete
+        </button>
+      </div>
+    </article>
     }
 
     @if ((todos | async)?.length === 0) {
-      <article class="empty-state">
-        No todos yet. Click "New Todo" to add one!
-      </article>
+    <article class="empty-state">
+      No todos yet. Click "New Todo" to add one!
+    </article>
     }
   </section>
 

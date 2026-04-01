@@ -7,7 +7,6 @@
 }
 
 body {
-    min-height: 100vh;
     margin: 0;
 }
 
@@ -19,12 +18,13 @@ article {
     }
 
     form {
-        text-align: left; /* Keep form labels/inputs left-aligned for better UX */
+        text-align: left;
+        /* Keep form labels/inputs left-aligned for better UX */
         display: inline-block;
         width: 100%;
         max-width: 400px;
     }
-    
+
     footer {
         text-align: center;
     }
