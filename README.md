@@ -1,59 +1,85 @@
-# RealtimeTodo
+# 🚀 Realtime Todo with Supabase & Angular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.2.
+A modern, high-performance Todo application built with **Angular 21** and **Supabase**, featuring real-time synchronization, secure authentication, and a clean UI powered by **Pico.css**.
 
-## Development server
+---
 
-To start a local development server, run:
+## ✨ Features
 
+- **Real-time Sync**: Todos update instantly across all clients using Supabase Realtime Broadcast.
+- **Secure Authentication**: User login and registration using Supabase Auth.
+- **Row Level Security (RLS)**: Data protection ensuring users only manage their own todos.
+- **User Discovery**: Login with a list of already registered usernames.
+- **Health Checks**: Integrated database connectivity verification.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: [Angular v21](https://angular.dev/)
+- **Backend/Database**: [Supabase](https://supabase.com/)
+- **Styling**: [Pico.css](https://picocss.com/)
+- **State Management**: [RxJS](https://rxjs.dev/)
+
+---
+
+## ⚙️ Supabase Configuration
+
+To get this project running with your own Supabase instance, follow these configuration steps:
+
+### 1. Database Schema & Migrations
+All database structures, including tables, functions, and triggers, are located in the `supabase/migrations` directory. Run these in your Supabase SQL Editor in the following order (better if you use the supabase cli):
+
+1. `20260318020824_initial_structure.sql`: Creates core `todos` table and `db_is_alive` function.
+2. `20260330102252_authenticated_access.sql`: Adds `user_id` to todos and implements strict RLS policies.
+3. `20260330113500_get_usernames.sql`: Adds RPC to fetch registered usernames.
+4. `20260330114000_update_usernames_rpc.sql`: Updates user metadata handling.
+
+### 2. Enable Realtime
+The application uses a custom broadcast trigger. Ensure that:
+- The `handle_your_table_changes` trigger is active on the `todos` table (applied via migrations).
+- Realtime is enabled for your project in the Supabase Dashboard (**Database -> Replication -> Source: public**).
+
+### 3. Row Level Security (RLS)
+RLS is mandatory for this project to function securely. The migrations set up the following:
+- **Select**: Authenticated users can see all todos.
+- **Insert/Update/Delete**: Users can only modify todos where `user_id` matches their own `auth.uid()`.
+- **Realtime**: Policies for `realtime.messages` are included to allow authenticated users to receive broadcasts.
+
+### 4. Auth Settings
+For a smooth onboarding experience:
+- Go to **Authentication -> Settings -> Email Auth**.
+- **Disable "Confirm email"** to allow users to sign in immediately after registration without needing to verify an email address.
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone & Install
 ```bash
-ng serve
+git clone https://github.com/luismtapiab/supabase-ng-realtime-todo.git
+cd realtime-todo
+npm install
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### 2. Environment Variables
+Create a `.env` file in the root directory (or use `.env.local`) with your Supabase credentials:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```env
+NG_APP_API_URL=https://your-project-ref.supabase.co
+NG_APP_ANON_KEY=your-anon-public-key
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+> [!IMPORTANT]
+> The variables must be prefixed with `NG_APP_` for the `@ngx-env/builder` to recognize them.
 
+### 3. Run Development Server
 ```bash
-ng generate --help
+npm run ng serve
 ```
+Navigate to `http://localhost:4200/`.
 
-## Building
+---
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 📜 License
+This project is open-source and available under the [MIT License](LICENSE).

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, output } from '@angular/core';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Database } from '../../services/database';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -12,6 +12,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 })
 export class LateralPanel implements OnInit, OnDestroy {
   logs: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  close = output();
   private subscription: Subscription = new Subscription();
 
 

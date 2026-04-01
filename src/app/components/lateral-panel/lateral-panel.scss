@@ -8,10 +8,32 @@
 .header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.header-actions {
+    display: flex;
+    gap: 0.5rem;
 }
 
 .header button {
-    padding: 8px 8px;
-    border-radius: 5px;
-    font-size: 20px;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    background: #222;
+    border: 1px solid #444;
+}
+
+.header button.close-btn {
+    font-size: 1.2rem;
+    padding: 0.1rem 0.5rem;
+    color: #888;
+}
+
+.header button.close-btn:hover {
+    color: white;
+    background: #333;
 }

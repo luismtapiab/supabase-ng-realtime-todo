@@ -1,6 +1,49 @@
 .side-panel-container {
     display: grid;
-    grid-template-columns: 1fr 400px;
+    grid-template-columns: 1fr auto;
     grid-template-rows: 1fr;
     height: 100vh;
+    background-color: var(--pico-background-color);
+}
+
+.sidebar {
+    width: 400px;
+    height: 100%;
+    overflow: hidden;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #0d0d0d;
+    border-left: 1px solid #222;
+}
+
+.hide-panel .sidebar {
+    width: 0;
+    border-left: none;
+}
+
+.show-logs-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 100;
+    padding: 0.5rem 1.2rem;
+    border-radius: 30px;
+    background: var(--pico-primary);
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    border: none;
+    transition: transform 0.2s, background 0.2s;
+    font-size: 0.9rem;
+}
+
+.show-logs-btn:hover {
+    transform: scale(1.05);
+    background: var(--pico-primary-hover);
+}
+
+.show-logs-btn .icon {
+    font-size: 1.1rem;
 }

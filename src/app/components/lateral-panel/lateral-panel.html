@@ -1,6 +1,10 @@
 <div class="panel">
     <div class="header">
-        <h3>Activity Log</h3> <button (click)="logs.next([])">Clear</button>
+        <h3>Activity Log</h3> 
+        <div class="header-actions">
+            <button (click)="logs.next([])">Clear</button>
+            <button class="close-btn" (click)="close.emit()">×</button>
+        </div>
     </div>
     <div class="logs">
 

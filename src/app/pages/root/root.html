@@ -1,5 +1,13 @@
-<main class="side-panel-container">
-
+<main class="side-panel-container" [class.hide-panel]="!isPanelVisible()">
   <app-todo-list></app-todo-list>
-  <app-lateral-panel></app-lateral-panel>
+  
+  <div class="sidebar">
+    <app-lateral-panel (close)="togglePanel()"></app-lateral-panel>
+  </div>
+
+  @if (!isPanelVisible()) {
+    <button class="show-logs-btn" (click)="togglePanel()">
+      <span class="icon">📋</span> Logs
+    </button>
+  }
 </main>

@@ -1,25 +1,26 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, ViewChild } from '@angular/core';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AliveMsg, Database } from '../../services/database';
 import { Todo } from '../../models/todo.model';
 import { Subject } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
+import { TodoFormDialog } from '../todo-form-dialog/todo-form-dialog';
 
 @Component({
   selector: 'app-todo-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, AsyncPipe],
+  imports: [CommonModule, FormsModule, AsyncPipe, TodoFormDialog],
   templateUrl: './todo-list.html',
   styleUrl: './todo-list.scss'
 })
 export class TodoList implements OnInit {
   todos: Subject<Todo[]> = new Subject<Todo[]>();
-  newTodoTitle = '';
-  newTodoContent = '';
   loading = signal(false);
   isConnected = signal<AliveMsg | null>(null);
   userMap = signal<Record<string, string>>({});
+
+  @ViewChild('todoForm') todoForm!: TodoFormDialog;
 
   constructor(
     private db: Database, 
@@ -76,8 +77,14 @@ export class TodoList implements OnInit {
     await this.auth.logout();
   }
 
-  async addTodo() {
-    if (!this.newTodoTitle.trim()) return;
+  openAddTodo() {
+    this.todoForm.open((title, content) => {
+      this.addTodo(title, content);
+    });
+  }
+
+  async addTodo(title: string, content: string) {
+    if (!title.trim()) return;
 
     const user = this.auth.getCurrentUser();
     if (!user) return;
@@ -85,17 +92,14 @@ export class TodoList implements OnInit {
     const { error } = await this.db.client
       .from('todos')
       .insert([{ 
-        title: this.newTodoTitle, 
-        content: this.newTodoContent,
+        title, 
+        content,
         is_completed: false,
         user_id: user.id
       }]);
 
     if (error) {
       console.error('Error adding todo:', error);
-    } else {
-      this.newTodoTitle = '';
-      this.newTodoContent = '';
     }
   }
 

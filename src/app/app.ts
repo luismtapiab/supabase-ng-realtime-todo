@@ -9,13 +9,14 @@ import { Login } from './components/login/login';
   standalone: true,
   imports: [RouterOutlet, CommonModule, Login],
   template: `
-    <div *ngIf="auth.isAuthenticated$ | async; else loginTmpl">
-      <router-outlet></router-outlet>
-    </div>
-    <ng-template #loginTmpl>
-       <app-login></app-login>
-    </ng-template>
-  `,
+    @if (auth.isAuthenticated$ | async) {
+      <div>
+        <router-outlet></router-outlet>
+      </div>
+    } @else {
+      <app-login></app-login>
+    }
+    `,
   styleUrl: './app.scss'
 })
 export class App {

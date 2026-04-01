@@ -5,22 +5,26 @@
         <hgroup>
           <h1>Todo <span>Realtime</span></h1>
           <p>{{ isRegistering ? 'Create your account to start' : 'Welcome back! Select your user or enter your username'
-            }}</p>
+          }}</p>
         </hgroup>
       </div>
     </header>
 
-    <div class="user-selection" *ngIf="!isRegistering && registeredUsers().length > 0">
-      <div class="user-chips">
-        <button type="button" *ngFor="let user of registeredUsers()" class="outline contrast user-chip"
-          (click)="selectUser(user.username)" [disabled]="loading()">
-          {{ user.username }}
-        </button>
+    @if (!isRegistering && registeredUsers().length > 0) {
+      <div class="user-selection">
+        <div class="user-chips">
+          @for (user of registeredUsers(); track user) {
+            <button type="button" class="outline contrast user-chip"
+              (click)="selectUser(user.username)" [disabled]="loading()">
+              {{ user.username }}
+            </button>
+          }
+        </div>
+        <div class="divider">
+          <span>OR</span>
+        </div>
       </div>
-      <div class="divider">
-        <span>OR</span>
-      </div>
-    </div>
+    }
 
     <form (submit)="onSubmit(); $event.preventDefault()">
       <label for="username">
@@ -29,9 +33,11 @@
           [disabled]="loading()" required autocomplete="username">
       </label>
 
-      <div class="error-msg" *ngIf="error()">
-        {{ error() }}
-      </div>
+      @if (error()) {
+        <div class="error-msg">
+          {{ error() }}
+        </div>
+      }
 
       <button type="submit" [aria-busy]="loading()" [disabled]="loading() || !username.trim()">
         {{ isRegistering ? 'Register & Start' : 'Sign In' }}

@@ -1,56 +1,54 @@
 <main class="container">
-    <nav>
-        <ul>
-            <li><strong>Todo Realtime</strong></li>
-            <li *ngIf="auth.user$ | async as user">
-                Hi, <strong>{{ user.user_metadata['username'] || user.email }}</strong>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                <span class="status" [class.connected]="isConnected()?.alive"
-                    [title]="isConnected()?.alive ? 'Connected' : 'Disconnected'">
-                    ●
-                </span>
-            </li>
-            <li><button (click)="fetchTodos()" class="outline contrast">Refresh</button></li>
-            <li><button (click)="logout()" class="secondary">Logout</button></li>
-        </ul>
-    </nav>
+  <nav>
+    <ul>
+      <li><strong>Todo Realtime</strong></li>
+      @if (auth.user$ | async; as user) {
+        <li>
+          Hi, <strong>{{ user.user_metadata['username'] || user.email }}</strong>
+        </li>
+      }
+    </ul>
 
-    <div class="add-todo">
-        <form (submit)="addTodo(); $event.preventDefault()" class="grid">
-            <input type="text" [(ngModel)]="newTodoTitle" name="title" placeholder="Title..." required>
-            <input type="text" [(ngModel)]="newTodoContent" name="content" placeholder="Details..."
-                (keyup.enter)="addTodo()">
-            <button type="submit" [aria-busy]="false">Add</button>
-        </form>
-    </div>
+    <ul>
+      <li>
+        <span class="status" [class.connected]="isConnected()?.alive"
+          [title]="isConnected()?.alive ? 'Connected' : 'Disconnected'">
+          ●
+        </span>
+      </li>
+      <li><button (click)="openAddTodo()" class="primary">New Todo</button></li>
+      <li><button (click)="fetchTodos()" class="outline contrast">Refresh</button></li>
+      <li><button (click)="logout()" class="secondary">Logout</button></li>
+    </ul>
+  </nav>
 
-    <section class="todo-list">
-        <article *ngFor="let todo of todos | async" class="todo-item" [class.completed]="todo.is_completed">
-            <header>
-                <div class="grid item-header">
-                    <label>
-                        <input type="checkbox" [checked]="todo.is_completed" (change)="toggleTodo(todo)">
-                        <span class="title"><strong>{{ todo.title }}</strong></span>
-                    </label>
-                    <span class="author">by @{{ getUsername(todo.user_id) }}</span>
-                </div>
-            </header>
+  <section class="todo-list">
+    @for (todo of todos | async; track todo) {
+      <article class="todo-item" [class.completed]="todo.is_completed">
+        <header>
+          <div class="grid item-header">
+            <label>
+              <input type="checkbox" [checked]="todo.is_completed" (change)="toggleTodo(todo)">
+              <span class="title"><strong>{{ todo.title }}</strong></span>
+            </label>
+            <span class="author">by @{{ getUsername(todo.user_id) }}</span>
+          </div>
+        </header>
+        <div class="content">
+          <span>{{ todo.content }}</span>
+          <button class="outline secondary delete-btn" (click)="deleteTodo(todo.id)">
+            Delete
+          </button>
+        </div>
+      </article>
+    }
 
-            <div class="content">
-                <span>{{ todo.content }}</span>
+    @if ((todos | async)?.length === 0) {
+      <article class="empty-state">
+        No todos yet. Click "New Todo" to add one!
+      </article>
+    }
+  </section>
 
-                <button class="outline secondary delete-btn" (click)="deleteTodo(todo.id)">
-                    Delete
-                </button>
-            </div>
-
-        </article>
-
-        <article *ngIf="(todos | async)?.length === 0" class="empty-state">
-            No todos yet. Add one above!
-        </article>
-    </section>
+  <app-todo-form-dialog #todoForm></app-todo-form-dialog>
 </main>
