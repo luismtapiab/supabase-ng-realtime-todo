@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "deploy": "npm run build -- --configuration production",
+    "serve:docs": "http-server docs --proxy http://localhost:8080?",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint"
@@ -44,6 +46,7 @@
     "@ngx-env/builder": "^20.0.0",
     "angular-eslint": "21.3.0",
     "eslint": "^10.0.2",
+    "http-server": "^14.1.1",
     "jsdom": "^27.1.0",
     "typescript": "~5.9.2",
     "typescript-eslint": "8.56.1",

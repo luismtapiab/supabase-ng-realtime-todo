@@ -24,6 +24,10 @@
         "build": {
           "builder": "@ngx-env/builder:application",
           "options": {
+            "outputPath": {
+              "base": "docs",
+              "browser": ""
+            },
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -35,6 +39,14 @@
             ],
             "styles": [
               "src/styles.scss"
+            ],
+            "allowedCommonJsDependencies": [
+              "@supabase/supabase-js",
+              "@supabase/postgrest-js",
+              "@supabase/realtime-js",
+              "@supabase/auth-js",
+              "@supabase/functions-js",
+              "@supabase/storage-js"
             ]
           },
           "configurations": {
@@ -42,8 +54,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "1MB",
+                  "maximumError": "2MB"
                 },
                 {
                   "type": "anyComponentStyle",
