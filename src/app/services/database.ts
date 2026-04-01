@@ -8,28 +8,43 @@ import { Observable, Subject } from 'rxjs';
 export class Database {
   client: SupabaseClient;
 
+  private channel: any;
   changes: Subject<any> = new Subject<any>();
+
   constructor() {
     this.client = createClient(
       import.meta.env.NG_APP_API_URL,
       import.meta.env.NG_APP_ANON_KEY
     );
 
-    const changes = this.client
+    this.setupRealtime();
+    
+    // Listen for auth changes to ensure realtime is connected with the right token
+    this.client.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+        this.setupRealtime();
+      }
+    });
+  }
+
+  private setupRealtime() {
+    if (this.channel) {
+      this.client.removeChannel(this.channel);
+    }
+
+    this.channel = this.client
       .channel('txchanges', {
         config: {
           private: true,
         },
       })
-      .on('broadcast', {
-        event: '*'
-      },
-        payload => {
-          this.changes.next(payload)
-          console.log(payload)
-        }
-      ).subscribe();
-
+      .on('broadcast', { event: '*' }, payload => {
+        this.changes.next(payload);
+        console.log('Broadcast received:', payload);
+      })
+      .subscribe((status) => {
+        console.log('Realtime status:', status);
+      });
   }
   getTodoChanges() {
     return this.changes.asObservable();

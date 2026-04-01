@@ -1,58 +1,56 @@
 .status {
-    font-size: 18px;
-    padding: 5px;
+    &.connected {
+        color: #22c55e;
+    }
+
+    &:not(.connected) {
+        color: #ef4444;
+    }
 }
 
-.status.connected {
-    color: green;
+main {
+    padding: 25px;
+    height: 100vh;
+    overflow-y: scroll;
 }
 
-.status:not(.connected) {
-    color: red;
+article {
+    &.completed {
+        opacity: 0.6;
+        text-decoration: line-through;
+    }
+
+    header {
+        .item-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            label {
+                margin: 0;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+        }
+    }
+
+    .author {
+        font-size: 0.75rem;
+        color: var(--muted-color);
+        font-style: italic;
+    }
+
+    .content {
+        display: flex;
+        justify-content: start;
+    }
 }
 
-
-.todo-container {
-    padding: 0px 30px;
-}
-
-.add-todo input {
-    padding: 15px;
-    border-radius: 5px;
-    font-size: 20px;
-    background-color: black;
-    color: white;
-}
-
-.add-todo button {
-    padding: 15px;
-    border-radius: 5px;
-    font-size: 20px;
-}
-
-ul.todo-list {
-    list-style: none;
-}
-
-.todo-item {
-    width: 80%;
-    display: flex;
-    justify-content: start;
-    gap: 10px;
-    align-items: center;
-    padding: 15px;
-    border-radius: 5px;
-    font-size: 16px;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 5px #fff;
-}
-
-.todo-item .delete-btn {
+.delete-btn {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    width: auto;
+    margin: 0;
     margin-left: auto;
-
-    border-color: red;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: black;
-    ;
 }

@@ -1,12 +1,23 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { AuthService } from './services/auth.service';
+import { CommonModule } from '@angular/common';
+import { Login } from './components/login/login';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
+  standalone: true,
+  imports: [RouterOutlet, CommonModule, Login],
+  template: `
+    <div *ngIf="auth.isAuthenticated$ | async; else loginTmpl">
+      <router-outlet></router-outlet>
+    </div>
+    <ng-template #loginTmpl>
+       <app-login></app-login>
+    </ng-template>
+  `,
   styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('realtime-todo');
+  auth = inject(AuthService);
 }

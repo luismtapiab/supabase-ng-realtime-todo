@@ -1,0 +1,49 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+
+  .user-chip {
+    margin: 0;
+    width: auto;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--secondary);
+  font-size: 0.75rem;
+  margin: 1.5rem 0;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--muted-border-color);
+  }
+
+  span {
+    padding: 0 1rem;
+    font-weight: bold;
+  }
+}
+
+.error-msg {
+  color: var(--form-element-invalid-active-border-color);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}

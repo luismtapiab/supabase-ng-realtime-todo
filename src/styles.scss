@@ -1,22 +1,31 @@
-/* You can add global styles to this file, and also import other style files */
+@use "@picocss/pico/scss" as pico;
+
+:root {
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --primary-focus: rgba(59, 130, 246, 0.2);
+}
+
 body {
-    background-color: #112;
-    color: white;
-    font-size: 20px;
+    min-height: 100vh;
+    margin: 0;
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    align-items: center;
-}
+article {
+    text-align: center;
 
-button {
-    background-color: darkblue;
-    color: white;
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 20px;
+    header {
+        text-align: left;
+    }
 
+    form {
+        text-align: left; /* Keep form labels/inputs left-aligned for better UX */
+        display: inline-block;
+        width: 100%;
+        max-width: 400px;
+    }
+    
+    footer {
+        text-align: center;
+    }
 }

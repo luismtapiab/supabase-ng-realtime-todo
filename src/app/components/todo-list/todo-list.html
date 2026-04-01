@@ -1,43 +1,56 @@
-<div class="todo-container">
-    <div class="header">
-        <h2>Todos with Realtime Supabase</h2>
-        <div>
-            @if(loading()) {
-            <span class="loading">
-                Loading...
-            </span>
-            }
-            <span class="status" [class.connected]="isConnected()?.alive">
-                {{ isConnected()?.alive ? 'Connected' : 'Not Connected' }}
-            </span>
-            <button (click)="fetchTodos()">Refresh</button>
-        </div>
-    </div>
-
+<main class="container">
+    <nav>
+        <ul>
+            <li><strong>Todo Realtime</strong></li>
+            <li *ngIf="auth.user$ | async as user">
+                Hi, <strong>{{ user.user_metadata['username'] || user.email }}</strong>
+            </li>
+        </ul>
+        <ul>
+            <li>
+                <span class="status" [class.connected]="isConnected()?.alive"
+                    [title]="isConnected()?.alive ? 'Connected' : 'Disconnected'">
+                    ●
+                </span>
+            </li>
+            <li><button (click)="fetchTodos()" class="outline contrast">Refresh</button></li>
+            <li><button (click)="logout()" class="secondary">Logout</button></li>
+        </ul>
+    </nav>
 
     <div class="add-todo">
-        <input type="text" [(ngModel)]="newTodoTitle" (keyup.enter)="addTodo()" placeholder="Add a new todo...">
-        <button (click)="addTodo()">Add</button>
+        <form (submit)="addTodo(); $event.preventDefault()" class="grid">
+            <input type="text" [(ngModel)]="newTodoTitle" name="title" placeholder="Title..." required>
+            <input type="text" [(ngModel)]="newTodoContent" name="content" placeholder="Details..."
+                (keyup.enter)="addTodo()">
+            <button type="submit" [aria-busy]="false">Add</button>
+        </form>
     </div>
 
+    <section class="todo-list">
+        <article *ngFor="let todo of todos | async" class="todo-item" [class.completed]="todo.is_completed">
+            <header>
+                <div class="grid item-header">
+                    <label>
+                        <input type="checkbox" [checked]="todo.is_completed" (change)="toggleTodo(todo)">
+                        <span class="title"><strong>{{ todo.title }}</strong></span>
+                    </label>
+                    <span class="author">by @{{ getUsername(todo.user_id) }}</span>
+                </div>
+            </header>
 
+            <div class="content">
+                <span>{{ todo.content }}</span>
 
-    <ul class="todo-list">
-        @for(todo of todos | async; track $index) {
-        <li [class.completed]="todo.is_completed" [class.loading]="loading()" class="todo-item">
-            <input type="checkbox" [checked]="todo.is_completed" (change)="toggleTodo(todo)">
-            <span class="title"><strong>{{ todo.title }}</strong></span>
-            <span class="content">{{ todo.content }}</span>
-            <button class="delete-btn" (click)="deleteTodo(todo.id)">X</button>
-        </li>
-        }
-    </ul>
-    @if((todos | async)?.length === 0) {
-    <div class="empty-state">
-        No todos yet. Add one above!
-    </div>
-    }
+                <button class="outline secondary delete-btn" (click)="deleteTodo(todo.id)">
+                    Delete
+                </button>
+            </div>
 
+        </article>
 
-
-</div>
+        <article *ngIf="(todos | async)?.length === 0" class="empty-state">
+            No todos yet. Add one above!
+        </article>
+    </section>
+</main>
