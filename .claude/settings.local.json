@@ -1,0 +1,7 @@
+{
+  "enabledMcpjsonServers": [
+    "supabase",
+    "github-mcp-server"
+  ],
+  "enableAllProjectMcpServers": true
+}
