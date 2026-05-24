@@ -62,5 +62,13 @@ article {
     width: auto;
     margin: 0;
     margin-left: auto;
+    color: #ef4444;
+    border-color: #ef4444;
 
+    &:hover,
+    &:focus {
+        background-color: #ef4444;
+        border-color: #ef4444;
+        color: white;
+    }
 }

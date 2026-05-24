@@ -27,7 +27,7 @@
       <header>
         <div class="grid item-header">
           <label>
-            <input type="checkbox" [checked]="todo.is_completed" (change)="toggleTodo(todo)">
+            <input type="checkbox" [checked]="todo.is_completed" [disabled]="!permissions.canModifyTodo(todo)" (change)="toggleTodo(todo)">
             <span class="title"><strong>{{ todo.title }}</strong></span>
           </label>
           <span class="author">by @{{ getUsername(todo.user_id) }}</span>
@@ -35,9 +35,11 @@
       </header>
       <div class="content">
         <span>{{ todo.content }}</span>
-        <button class="outline secondary delete-btn" (click)="deleteTodo(todo.id)">
-          Delete
-        </button>
+        @if (permissions.canModifyTodo(todo)) {
+          <button class="outline delete-btn" (click)="deleteTodo(todo.id)">
+            Delete
+          </button>
+        }
       </div>
     </article>
     }

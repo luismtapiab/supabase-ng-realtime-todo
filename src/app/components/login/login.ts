@@ -2,6 +2,7 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { Database } from '../../services/database';
 
 @Component({
   selector: 'app-login',
@@ -12,6 +13,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class Login implements OnInit {
   private auth = inject(AuthService);
+  private db = inject(Database);
   
   username = '';
   isRegistering = false;
@@ -19,8 +21,22 @@ export class Login implements OnInit {
   error = signal<string | null>(null);
   registeredUsers = signal<{id: string, username: string}[]>([]);
 
-  async ngOnInit() {
-    this.registeredUsers.set(await this.auth.getRegisteredUsernames());
+  ngOnInit() {
+    this.loading.set(true);
+    this.db.isAlive().subscribe({
+      next: async () => {
+        try {
+          this.registeredUsers.set(await this.auth.getRegisteredUsernames());
+        } finally {
+          this.loading.set(false);
+        }
+      },
+      error: (err) => {
+        console.error('Healthcheck failed:', err);
+        this.error.set('Network error: Unable to connect to the database.');
+        this.loading.set(false);
+      }
+    });
   }
 
   async onSubmit() {

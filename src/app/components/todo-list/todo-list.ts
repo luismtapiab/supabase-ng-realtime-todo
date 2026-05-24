@@ -5,6 +5,7 @@ import { AliveMsg, Database } from '../../services/database';
 import { Todo } from '../../models/todo.model';
 import { Subject } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
+import { PermissionsService } from '../../services/permissions.service';
 import { TodoFormDialog } from '../todo-form-dialog/todo-form-dialog';
 
 @Component({
@@ -24,7 +25,8 @@ export class TodoList implements OnInit {
 
   constructor(
     private db: Database, 
-    public auth: AuthService
+    public auth: AuthService,
+    public permissions: PermissionsService
   ) { }
 
   ngOnInit() {
