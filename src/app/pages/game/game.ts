@@ -50,7 +50,13 @@ import { FormsModule } from '@angular/forms';
         </aside>
 
         <main class="canvas-wrapper">
-          <button class="outline" (click)="toggleGrid()" style="position: absolute; top: 1rem; left: 1rem;" >
+          <button 
+            [class.outline]="!isGridVisible" 
+            [class.secondary]="isGridVisible"
+            [attr.data-tooltip]="isGridVisible ? 'Hide Grid' : 'Show Grid'"
+            data-placement="right"
+            (click)="toggleGrid()" 
+            style="position: absolute; top: 1rem; left: 1rem;" >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
           </button>
           <app-pixel-canvas [selectedColor]="selectedColor" />
@@ -193,6 +199,7 @@ export class GamePageComponent implements OnInit {
   username = 'Guest';
   onlineCount = 0;
   isUserModalOpen = signal(false);
+  isGridVisible = false;
 
   // Derive presence list for the table
   presenceList = signal<any[]>([]);
@@ -215,6 +222,7 @@ export class GamePageComponent implements OnInit {
   }
 
   toggleGrid() {
+    this.isGridVisible = !this.isGridVisible;
     this.pixelCanvas.toggleGrid();
   }
 

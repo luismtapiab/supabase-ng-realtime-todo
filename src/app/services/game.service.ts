@@ -36,6 +36,7 @@ export class GameService {
   latency$ = this.latencySubject.asObservable();
 
   private channel: RealtimeChannel | null = null;
+  private isSubscribed = false;
   private pingStart: number = 0;
 
   constructor() {
@@ -99,6 +100,7 @@ export class GameService {
       })
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
+          this.isSubscribed = true;
           const user = this.auth.getCurrentUser();
           if (user) {
             await this.channel?.track({
@@ -140,7 +142,7 @@ export class GameService {
     this.lastPresenceUpdate = now;
 
     const user = this.auth.getCurrentUser();
-    if (!user || !this.channel) return;
+    if (!user || !this.channel || !this.isSubscribed) return;
 
     this.channel.track({
       user_id: user.id,
@@ -153,7 +155,7 @@ export class GameService {
 
   private startPingLoop() {
     setInterval(() => {
-      if (this.channel) {
+      if (this.channel && this.isSubscribed) {
         this.pingStart = Date.now();
         this.channel.send({
           type: 'broadcast',
@@ -161,6 +163,6 @@ export class GameService {
           payload: {},
         });
       }
-    }, 5000);
+    }, 10000);
   }
 }

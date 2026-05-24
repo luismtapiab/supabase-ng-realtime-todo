@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, Input, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameService, Pixel, PresenceState } from '../../services/game.service';
 import { AuthService } from '../../services/auth.service';
@@ -17,6 +17,11 @@ import { Subject, takeUntil } from 'rxjs';
         (mouseup)="onMouseUp($event)"
         (mouseleave)="onMouseLeave()">
       </canvas>
+      @if (hoverPosition(); as pos) {
+        <div class="coord-hint">
+          ({{ pos.x }}, {{ pos.y }})
+        </div>
+      }
     </div>
   `,
   styles: [`
@@ -37,6 +42,16 @@ import { Subject, takeUntil } from 'rxjs';
     canvas#overlayCanvas {
       z-index: 10;
     }
+    .coord-hint {
+      position: absolute;
+      top: -1.3rem;
+      right: 0;
+      color: var(--pico-muted-color);
+      font-size: 0.8rem;
+      font-family: monospace;
+      pointer-events: none;
+      z-index: 20;
+    }
   `]
 })
 export class PixelCanvasComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -55,6 +70,8 @@ export class PixelCanvasComponent implements OnInit, OnDestroy, AfterViewInit {
   private game = inject(GameService);
   private auth = inject(AuthService);
   private currentPixels: Pixel[] = [];
+
+  hoverPosition = signal<{x: number, y: number} | null>(null);
 
   private lastPaintTime = 0;
   private baseCooldown = 500; // ms
@@ -189,7 +206,10 @@ export class PixelCanvasComponent implements OnInit, OnDestroy, AfterViewInit {
     const y = Math.floor((event.clientY - rect.top) / this.pixelSize);
 
     if (x >= 0 && x < this.gridWidth && y >= 0 && y < this.gridHeight) {
+      this.hoverPosition.set({ x, y });
       this.game.updatePresence(x, y);
+    } else {
+      this.hoverPosition.set(null);
     }
 
     if (event.buttons === 1) {
@@ -200,7 +220,7 @@ export class PixelCanvasComponent implements OnInit, OnDestroy, AfterViewInit {
   onMouseUp(event: MouseEvent) { }
 
   onMouseLeave() {
-    // Optionally hide cursor
+    this.hoverPosition.set(null);
   }
 
   private paint(event: MouseEvent) {
