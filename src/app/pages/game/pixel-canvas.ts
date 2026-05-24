@@ -57,7 +57,8 @@ export class PixelCanvasComponent implements OnInit, OnDestroy, AfterViewInit {
   private currentPixels: Pixel[] = [];
 
   private lastPaintTime = 0;
-  private cooldown = 500; // ms
+  private baseCooldown = 500; // ms
+  private currentCooldown = 500;
 
   ngAfterViewInit() {
     this.updateCanvasSize();
@@ -75,6 +76,7 @@ export class PixelCanvasComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe(presence => {
         this.renderPresence(presence);
+        this.currentCooldown = presence.size > 1 ? this.baseCooldown : 0;
       });
   }
 
@@ -203,7 +205,7 @@ export class PixelCanvasComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private paint(event: MouseEvent) {
     const now = Date.now();
-    if (now - this.lastPaintTime < this.cooldown) return;
+    if (this.currentCooldown > 0 && now - this.lastPaintTime < this.currentCooldown) return;
 
     const rect = this.overlayCanvas.nativeElement.getBoundingClientRect();
     const x = Math.floor((event.clientX - rect.left) / this.pixelSize);
